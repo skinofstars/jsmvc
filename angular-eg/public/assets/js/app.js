@@ -6,7 +6,7 @@ function NewsCtrl($scope, $resource){
     // we use $.getJSON instead as the bbc news ticker
     // would otherwise fire a cross origin error
 
-    $scope.foo = 'bar';
+    $scope.title = '';
 
     $scope.items = [{
         text: 'basic item'
@@ -15,6 +15,7 @@ function NewsCtrl($scope, $resource){
     var newsUrl = "http://cdnedge.bbc.co.uk/nol/ukfs_news/hi/front_page/ticker.json";
 
     $.getJSON(newsUrl).then(function(data){
+        $scope.title = data.name;
         $.each(data.entries, function(i,entry){
             // because we're using jquery's $.getJSON method
             // angular considers it out of scope

@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>JS MV*</title>
+
+        <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+        <meta name="author" content="Hakim El Hattab">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <link rel="stylesheet" href="css/reveal.min.css">
+        <link rel="stylesheet" href="css/theme/wo.css" id="theme">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+            document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+
+                <section>
+                    <h1>JS MV*</h1>
+                    <h3>Javascript framework speed dating</h3>
+
+                </section>
+
+
+                <!-- ******* Assesment Criteria ******* -->
+
+                <section>
+                    <h2>Speed date checklist</h2>
+
+                    <ul>
+                        <li>Capabilities</li>
+                        <li>Flexible/Opinionated</li>
+                        <li>Track Record</li>
+                        <li>Documentation</li>
+                        <li>Community</li>
+                    </ul>
+                </section>
+
+
+                <!-- ******* Targets ******* -->
+
+                <section>
+                    <h2>Something simple!</h2>
+                    <ul>
+                        <li>Get json feed to consume</li>
+                        <li>Display on page</li>
+                    </ul>
+                </section>
+
+
+                <!-- ******* Knockout ******* -->
+
+                <section>
+                    <section>
+                        <h1>Knockout.</h1>
+                    </section>
+
+                    <section>
+                        <h2>Knockout. HTML</h2>
+                        <pre><code contenteditable>
+    &lt;h1 data-bind="text: title"&gt;Page Title&lt;/h1&gt;
+
+    &lt;ul data-bind="foreach: entries"&gt;
+        &lt;li&gt;
+            &lt;p data-bind="text: headline"&gt;Item&lt;/p&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Knockout. JS</h2>
+                        <pre><code contenteditable>
+    $(document).ready(function(){
+        var binding = ko.applyBindings(new NewsView());
+    });
+
+    function NewsView(){
+        var self = this;
+        self.title = ko.observable();
+        self.entries = ko.observableArray([]);
+
+        var newsUrl = "http://cdnedge.bbc.co.uk/nol/ukfs_news/hi/front_page/ticker.json";
+        $.getJSON(newsUrl).then(function(data){
+            self.title(data.name);
+
+            $.each(data.entries, function(i,entry){
+                self.entries.push(entry);
+            });
+        });
+    }
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>I feel like...</h2>
+                        <p><a href="ko-eg/public/index.html">Knockout example page</a></p>
+                    </section>
+
+                </section>
+
+
+                <!-- ******* Backbone ******* -->
+
+                <section>
+                    <section>
+                        <h1>Backbone.js</h1>
+                    </section>
+                    <section>
+                        <h2>Backbone.js HTML</h2>
+                        <pre><code contenteditable>
+todo
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h2>Backbone.js JS</h2>
+                        <pre><code contenteditable>
+todo
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>I feel like...</h2>
+                        <p><a href="backbone-eg/public/index.html">Backbone example page</a></p>
+                    </section>
+
+                </section>
+
+
+
+                <section>
+                    <section>
+                        <h1>AngularJS</h1>
+                    </section>
+                    <section>
+                        <h2>AngularJS HTML</h2>
+                        <pre><code contenteditable>
+    &lt;html ng-app="News"&gt;
+                        </code></pre>
+
+                        <pre><code contenteditable>
+    &lt;div ng-controller="NewsCtrl"&gt;
+        &lt;h1&gt;News Title&lt;/h1&gt;
+        &lt;ul&gt;
+            &lt;li ng-repeat="entry in items"&gt;
+                &lt;p&gt;{{entry.text}}&lt;/p&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h2>AngularJS JS</h2>
+                        <pre><code contenteditable>
+    angular.module("News", ['ngResource']);
+    // can't actually use ngResource in this app :(
+
+    function NewsCtrl($scope, $resource){
+        $scope.title = '';
+        $scope.items = [{
+            text: 'basic item'
+        }];
+
+        var newsUrl = "http://cdnedge.bbc.co.uk/nol/ukfs_news/hi/front_page/ticker.json";
+
+        $.getJSON(newsUrl).then(function(data){
+            $scope.title = data.name;
+            $.each(data.entries, function(i,entry){
+                // use $apply as $.getJSON is out of scope
+                $scope.$apply(function(){
+                    $scope.items.push({
+                        text: entry.headline
+                    });
+                });
+            });
+        });
+    }
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>I feel like...</h2>
+                        <p><a href="angular-eg/public/index.html">Angular example page</a></p>
+                    </section>
+
+                </section>
+
+
+                <section>
+                    <h2>Also worth looking at...</h2>
+                    <ul>
+                        <li>Spine - light, backbony, for mobiles.</li>
+                        <li>Sammy.js - small, modular and structured.</li>
+                        <li>Ember - larger, templating and web compontents.</li>
+                    </lu>
+
+            </div>
+
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.min.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                    // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+
+        </script>
+</body>
+</html>
