@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+    var DecoratorContent = Backbone.Model.extend({
+        defaults: {
+            title: 'Default page title'
+        }
+    });
+
     var Entry = Backbone.Model.extend({
         defaults: {
             headline: 'Default model headline'
@@ -19,12 +25,14 @@ $(document).ready(function(){
             var self = this;
 
             this.collection = new Entries();
-
+            this.decoratorContent = new DecoratorContent();
 
             var newsUrl = "http://cdnedge.bbc.co.uk/nol/ukfs_news/hi/front_page/ticker.json";
 
             // hell, just grab the data however you like
             $.getJSON(newsUrl).then(function(data){
+
+                self.decoratorContent.set({'title': data.name}); // probably nicer ways to do this
 
                 _(data.entries).each(function(item){
                     var entry = new Entry();
@@ -33,37 +41,32 @@ $(document).ready(function(){
                     });
                     self.collection.add(entry); // add entry to collection; view is updated via event 'add'
                 });
+
+                self.render(); // because waiting for data? using triggers would probably be better
             });
-
-            console.log(self.collection)
-
-            this.render();
         },
 
         render: function(){
-            console.log('render', this.collection);
 
-collection = this.collection
             // do we want to clear the default HTML here?
             // or are we looking to hook into existing node IDs?! (urgh)
             // or are we just offering up <body/> for the HTML?!?!
-console.log(this.collection.models)
 
-            $('#main', this.el).html('')
+            //$('#main', this.el).html('');
+            $('h1#title', this.el).text(this.decoratorContent.get('title'));
+            //$('#main', this.el).append("<ul></ul>");
 
-            $('#main', this.el).append("<ul></ul>");
+            models = this.collection.models;
 
-            // _(this.collection.models).each(function(item){ // in case collection is not empty
-            //     console.log('yo')
-            //     self.appendItem(item);
-            // }, this);
+            _.each(models, function(item){ // in case collection is not empty
+                this.appendEntry(item);
+            }, this);
 
-// zomg, works in console
-// $.each(collection.models, function(i,data){console.log(data.attributes.headline)})
+
         },
 
         appendEntry: function(item){
-            $('ul', this.el).append("<li>"+ item.headline +"</li>");
+            $('ul#entries', this.el).append("<li>"+ item.get('headline') +"</li>");
         }
 
     });

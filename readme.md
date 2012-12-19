@@ -1,4 +1,8 @@
-JS MVC
+JS MV*
 ======
 
-Actually, the name is kinda misleading. These are some simple JS frontend framework knockup examples.
+Some simple JavaScript frontend framework knockup examples.
+
+* Knockout.
+* Backbone.js
+* AngularJS

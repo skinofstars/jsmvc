@@ -49,9 +49,9 @@
                     <ul>
                         <li>Capabilities</li>
                         <li>Flexible/Opinionated</li>
-                        <li>Track Record</li>
                         <li>Documentation</li>
                         <li>Community</li>
+                        <li>Track Record</li>
                     </ul>
                 </section>
 
@@ -66,6 +66,17 @@
                     </ul>
                 </section>
 
+
+                <!-- ***** ***** -->
+
+                <section>
+                    <h2>Like this</h2>
+                    <blockquote>
+                    <iframe src="ko-eg/public/index.html" width="800" height="400">
+                      <p>Your browser does not support iframes.</p>
+                    </iframe>
+                </blockquote>
+                </section>
 
                 <!-- ******* Knockout ******* -->
 
@@ -113,6 +124,15 @@
 
                     <section>
                         <h2>I feel like...</h2>
+                        <ul>
+                            <li>Powerful publisher/subscriber</li>
+                            <li>Neat templating</li>
+                            <li>Un-opinionated - Easy to drop in</li>
+                            <li>Lack of conventions</li>
+                            <li>Documentation isn't too bad</p>
+                            <li>Unproven? Though comes from ASP world</li>
+                        </ul>
+
                         <p><a href="ko-eg/public/index.html">Knockout example page</a></p>
                     </section>
 
@@ -125,28 +145,137 @@
                     <section>
                         <h1>Backbone.js</h1>
                     </section>
+
                     <section>
                         <h2>Backbone.js HTML</h2>
                         <pre><code contenteditable>
-todo
+    &lt;div class="container" id="main"&gt;
+        &lt;h1 id="title"&gt;Title&lt;/h1&gt;
+        &lt;ul id="entries"&gt;
+            &lt;li&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
                         </code></pre>
                     </section>
+
                     <section>
-                        <h2>Backbone.js JS</h2>
+                        <h2>Backbone.js HTML </h2>
+                        <p>or maybe something like this?</p>
                         <pre><code contenteditable>
-todo
+    &lt;script type="text/template" id="decorator_template"&gt;
+        &lt;h1&gt;&lt;%= decoratorContent.title %&gt;&lt;/h1&gt;
+    &lt;/script&gt;
+
+    &lt;ul id="entries"&gt;
+    &lt;/ul&gt;
+
+    &lt;script type="text/template" id="entry_template"&gt;
+        &lt;li&gt;&lt;%= entry.headline %&gt;&lt;/li&gt;
+    &lt;/script&gt;
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Backbone.js JS - Models</h2>
+                        <pre><code contenteditable>
+    var DecoratorContent = Backbone.Model.extend({
+        defaults: {
+            title: 'Default page title'
+        }
+    });
+
+    var Entry = Backbone.Model.extend({
+        defaults: {
+            headline: 'Default model headline'
+        }
+    });
+
+    var Entries = Backbone.Collection.extend({
+        model: Entry
+    });
+
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Backbone.js JS - View: Initialize</h2>
+                        <pre><code contenteditable>
+    var NewsView = Backbone.View.extend({
+        el: $('body'),
+
+        initialize: function(){
+            _.bindAll(this, 'render', 'appendEntry');
+
+            var self = this;
+            this.collection = new Entries();
+            this.decoratorContent = new DecoratorContent();
+
+            var newsUrl = "http://cdnedge.bbc.co.uk/nol/ukfs_news/hi/front_page/ticker.json";
+
+            $.getJSON(newsUrl).then(function(data){
+                self.decoratorContent.set({'title': data.name});
+
+                _(data.entries).each(function(item){
+                    var entry = new Entry();
+                    entry.set({
+                        headline: item.headline
+                    });
+                    self.collection.add(entry);
+                });
+
+                self.render();
+            });
+        },
+                        </code></pre>
+                        <p>... it goes on!</p>
+                    </section>
+
+                    <section>
+                        <h2>Backbone.js JS - View: Render </h2>
+                        <pre><code contenteditable>
+        render: function(){
+            $('h1#title', this.el).text(this.decoratorContent.get('title'));
+
+            models = this.collection.models;
+
+            _.each(models, function(item){
+                this.appendEntry(item);
+            }, this);
+        },
+
+        appendEntry: function(item){
+            $('ul#entries', this.el).append("&lt;li&gt;"+ item.get('headline') +"&lt;/li&gt;");
+        }
+    });
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Backbone.js JS - Finally </h2>
+                        <pre><code contenteditable>
+    $(document).ready(function(){
+        var newsView = new NewsView();
+    });
                         </code></pre>
                     </section>
 
                     <section>
                         <h2>I feel like...</h2>
+                        <ul>
+                            <li>Verbose - steep learning curve</li>
+                            <li>Templating through jQuery</li>
+                            <li>Opinionated</li>
+                            <li>Well supported and widely used</li>
+                            <li>... and I'm probably not doing it right</li>
+                        </ul>
+
                         <p><a href="backbone-eg/public/index.html">Backbone example page</a></p>
                     </section>
 
                 </section>
 
 
-
+                <!-- ******* Angular JS ******** -->
                 <section>
                     <section>
                         <h1>AngularJS</h1>
@@ -199,6 +328,13 @@ todo
 
                     <section>
                         <h2>I feel like...</h2>
+                        <ul>
+                            <li>Strong HTML integration</li>
+                            <li>Convention over configuration</li>
+                            <li>Young, but supported by Google (..like DART)</li>
+                            <li>Documentation is shallow</li>
+                        </ul>
+
                         <p><a href="angular-eg/public/index.html">Angular example page</a></p>
                     </section>
 
@@ -211,8 +347,12 @@ todo
                         <li>Spine - light, backbony, for mobiles.</li>
                         <li>Sammy.js - small, modular and structured.</li>
                         <li>Ember - larger, templating and web compontents.</li>
-                    </lu>
+                        <li>.... TodoMVC - for a many frameworks in action</li>
+                    </ul>
+                </section>
 
+                <section>
+                    <h1>Thanks!</h1>
             </div>
 
         </div>
